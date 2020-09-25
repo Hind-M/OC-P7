@@ -1,0 +1,5 @@
+python-3.7.6
+pip-20.0.2
+setuptools-45.2.0
+sqlite-3.31.1
+wheel-0.34.2
