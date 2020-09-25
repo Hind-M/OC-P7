@@ -20,6 +20,8 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+server = app.server
+
 colors = {
     'background': '#000000',
     'text': '#7FDBFF'
@@ -555,4 +557,4 @@ def update_desc_plot_comp(client_id_value, desc_value):
     
 
 if __name__ == '__main__':
-    app.run_server(debug=False, host='0.0.0.0', port = int(os.environ.get("PORT", 5000)))
+    app.run_server(debug=False) #, host='0.0.0.0', port = int(os.environ.get("PORT", 5000)))
