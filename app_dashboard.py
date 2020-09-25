@@ -27,6 +27,15 @@ colors = {
     'text': '#7FDBFF'
 }
 
+
+#########################################################################
+port = int(os.environ.get("PORT", 5000))
+print(port)
+
+#########################################################################
+
+
+
 # Load data from csv
 df = pd.read_csv('data/data_dashboard_orig_proba.csv')
 # Load the random forest model from pkl file 
