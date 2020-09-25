@@ -41,7 +41,7 @@ df = pd.read_csv('data/data_dashboard_orig_proba.csv')
 # Load the random forest model from pkl file 
 random_forest_shap = joblib.load('data/random_forest_shap.pkl')
 
-df = df.iloc[:20]
+df = df.iloc[:20000]
 
 # Get back categorical columns values already encoded with one hot encoding
 def reverse_ohe(df, col_name):
