@@ -25,9 +25,9 @@ colors = {
 }
 
 # Load data from csv
-df = pd.read_csv('data\\data_dashboard_orig_proba.csv')
+df = pd.read_csv('data/data_dashboard_orig_proba.csv')
 # Load the random forest model from pkl file 
-random_forest_shap = joblib.load('data\\random_forest_shap.pkl')
+random_forest_shap = joblib.load('data/random_forest_shap.pkl')
 
 # Get back categorical columns values already encoded with one hot encoding
 def reverse_ohe(df, col_name):
