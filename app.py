@@ -12,6 +12,7 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 
+import os
 
 import joblib
 
@@ -554,4 +555,4 @@ def update_desc_plot_comp(client_id_value, desc_value):
     
 
 if __name__ == '__main__':
-    app.run_server(debug=False, host='0.0.0.0')
+    app.run_server(debug=False, host='0.0.0.0', port = int(os.environ.get("PORT", 5000)))
