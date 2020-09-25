@@ -13,8 +13,13 @@ more-itertools==8.2.0
 mpmath==1.1.0
 numpy==1.18.1
 pandas==1.0.1
+pip==20.0.2
 plotly==4.10.0
+python==3.7.6
 scikit-learn==0.23.2
 scipy==1.4.1
 seaborn==0.10.0
+setuptools==45.2.0
 slicer==0.0.3
+sqlite==3.31.1
+wheel==0.34.2
