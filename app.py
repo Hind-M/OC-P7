@@ -557,4 +557,6 @@ def update_desc_plot_comp(client_id_value, desc_value):
     
 
 if __name__ == '__main__':
-    app.run_server(debug=False) #, host='0.0.0.0', port = int(os.environ.get("PORT", 5000)))
+    port = int(os.environ.get("PORT", 5000))
+    print(port)
+    app.run_server(debug=False, host='0.0.0.0', port=port)
