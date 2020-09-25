@@ -554,4 +554,4 @@ def update_desc_plot_comp(client_id_value, desc_value):
     
 
 if __name__ == '__main__':
-    app.run_server() # Launch the server; TODO deactivate debug before deployment ?
+    app.run_server(debug=False, host='0.0.0.0')
