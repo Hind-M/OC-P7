@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Run this app with `python app.py` and
-# visit http://127.0.0.1:8050/ in your web browser.
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -13,7 +10,6 @@ import pandas as pd
 import numpy as np
 
 import os
-
 import joblib
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -28,20 +24,13 @@ colors = {
 }
 
 
-#########################################################################
-port = int(os.environ.get("PORT", 5000))
-print(port)
-
-#########################################################################
-
-
-
 # Load data from csv
 df = pd.read_csv('data/data_dashboard_orig_proba.csv')
 # Load the random forest model from pkl file 
 random_forest_shap = joblib.load('data/random_forest_shap.pkl')
 
-df = df.iloc[:20000]
+# Get only the 15 000 first clients (due to the storage limit in Heroku)
+df = df.iloc[:15000]
 
 # Get back categorical columns values already encoded with one hot encoding
 def reverse_ohe(df, col_name):
@@ -82,8 +71,6 @@ glob_interp_df = glob_interp_df.rename(columns={'SK_ID_CURR': 'Client Id',
         'OBS_60_CNT_SOCIAL_CIRCLE' : 'Nb of observations of clients social surroundings with observable 60 DPD (days past due) default (OBS_60_CNT_SOCIAL_CIRCLE)'})
         
 glob_interp_df_filtered = glob_interp_df[glob_interp_df['Client Id']==glob_interp_df['Client Id'].iloc[0]]
-print(glob_interp_df_filtered.shape)
-
 
 # Create options for dropdown
 dd_options=[]
@@ -95,17 +82,6 @@ feature_importance = random_forest_shap.feature_importances_
 indices_fi = np.argsort(feature_importance)[::-1]
 features = list(df.columns)
 features = features[1:-4]
-print("features")
-print(len(features))
-# print(features[:6])
-# print(features[-6:])
-
-
-# plt.xticks(range(len(features)), np.array(features)[indices], rotation=90)
-# plt.xlim([-1, 5])
-# labels = dict(zip([str(x) for x in range(0,5)] , [str(x) for x in list(np.array(features)[indices_fi][:5])]))
-# print(labels)
-
 
 labels={'index':'Features', 'value':'Features importance'}
 fig_feature_imp = px.bar(feature_importance[indices_fi][:7], title="Features importance", labels=labels) #, color="r")
@@ -115,7 +91,7 @@ fig_feature_imp.update_xaxes(
     tickvals=[str(x) for x in range(0,7)],
 )
 
-# Create dataframe for client s descriptive information
+# Create dataframe for clients descriptive information
 
 # Personal information:
 # CODE_GENDER (ohe)
@@ -174,25 +150,7 @@ glob_geo_df = glob_geo_df.rename(columns={'SK_ID_CURR': 'Client Id',
         'REGION_RATING_CLIENT' : 'Our rating of the region where client lives (1,2,3)'})
 
 
-# Create figures for comparison between clients
-
-# CODE_GENDER
-# CNT_CHILDREN
-# NAME_FAMILY_STATUS
-# NAME_HOUSING_TYPE
-# NAME_EDUCATION_TYPE
-# OCCUPATION_TYPE
-# NAME_INCOME_TYPE
-# AMT_INCOME_TOTAL
-# REGION_POPULATION_RELATIVE
-# REGION_RATING_CLIENT
-# labels={'index':'Features', 'value':'Features importance'}
-# fig_feature_imp = px.bar(feature_importance[indices_fi][:7], title="Features importance", labels=labels) #, color="r")
-# fig_feature_imp.layout.update(showlegend=False)
-# fig_feature_imp.update_xaxes(
-    # ticktext=[str(x) for x in list(np.array(features)[indices_fi][:7])],
-    # tickvals=[str(x) for x in range(0,7)],
-# )
+# Create figures for comparison between clients (all of the clients together, and between clients similar to the selected one)
 labels_comp = glob_pers_df['Client gender'].value_counts().index
 values_comp = glob_pers_df['Client gender'].value_counts().values
 names_comp = glob_pers_df['Client gender'].unique()
@@ -210,26 +168,7 @@ app.layout = html.Div(children=[
             'color': colors['text']
         }
     ),
-       
-    # html.Label('Client Id', style={'fontWeight': 'bold'}),
-    # dcc.Dropdown(id='dd_select',
-        # options=dd_options,
-        # value=df['SK_ID_CURR'].iloc[0],
-        # style={
-            # 'height': '30px', 
-            # 'width': '150px',
-        # }
-    # ),
     
-    # html.Div(children=[dcc.Markdown('''
-    # The score of the client number **354482**
-    # has a *loan reimbursement* score of:
-    # ''', id='parag_interp'),
-    # html.Div(round(df['pred_proba_0'].iloc[0], 2), style={'color': 'green'}, id='score_interp')],
-    # style={'marginTop': 10,
-    # 'width': '200px',}),
-        
-    # style={'font-style': 'italic'}
     html.Div(children=[
     
         html.Div(children=[
@@ -417,7 +356,6 @@ def update_desc_plot_comp(client_id_value, desc_value):
     
     df_filtered = df[(df['pred_proba_0']>=client_pred_proba_0_min)&(df['pred_proba_0']<=client_pred_proba_0_max)]
     
-    #
     if (desc_value =='G'):
         # Compare to all clients
         labels_comp = glob_pers_df['Client gender'].value_counts().index
@@ -568,7 +506,4 @@ def update_desc_plot_comp(client_id_value, desc_value):
     
 
 if __name__ == '__main__':
-    # port = int(os.environ.get("PORT", 5000))
-    # print(port)
-    # app.run_server(debug=False, host='0.0.0.0', port=port)
     app.run_server(debug=False)
